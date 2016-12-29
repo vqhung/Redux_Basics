@@ -2,66 +2,8 @@ var redux = require('redux');
 
 console.log('Starting redux example');
 
-var stateDefault = {
-  name: 'Anonymous',
-  hobbies: [],
-  movies: []
-}
-
-var hobbyId = 1;
-var movieId = 1;
-var oldreducer = (state = stateDefault, action) => {
-//  state = state || {name: 'Anonymous'};
-
-  switch (action.type) {
-    case 'CHANGE_NAME':
-      return {
-        ...state,
-        name: action.name
-      };
-
-    case 'ADD_HOBBY':
-      return {
-        ...state,
-        hobbies: [
-          ...state.hobbies,
-          {
-            id: hobbyId++,
-            hobby: action.hobby
-          }
-
-        ]
-      };
-
-    case 'ADD_MOVIE':
-        return {
-          ...state,
-          movies: [
-            ...state.movies,
-            {
-              id: movieId++,
-              title: action.title,
-              genre: action.genre
-            }
-          ]
-        };
-    case 'REMOVE_MOVIE':
-      return {
-        ...state,
-        movies: state.movies.filter( movie => movie.id !== action.id)
-      };
-
-    case 'REMOVE_HOBBY':
-      return {
-        ...state,
-        hobbies: state.hobbies.filter(hobby => hobby.id !== action.id)
-      }
-
-    default:
-      return state;
-  }
-
-};
+// Name reducer and action generators
+// ----------------------------------
 
 var nameReducer = function (state = 'Anonymous', action) {
   switch (action.type) {
@@ -74,6 +16,17 @@ var nameReducer = function (state = 'Anonymous', action) {
   }
 };
 
+var changeName = (name) => {
+  return {
+    type: 'CHANGE_NAME',
+    name
+  };
+};
+
+// Hobby reducer and action generators
+// ----------------------------------
+
+var hobbyId = 1;
 var hobbyReducer = function (state = [], action) {
 
   switch (action.type) {
@@ -91,8 +44,26 @@ var hobbyReducer = function (state = [], action) {
       default:
         return state;
   }
+};
+
+var addHobby = (hobby) => {
+  return {
+    type: 'ADD_HOBBY',
+    hobby
+  };
+};
+
+var removeHobby = (id) => {
+  return {
+    type: 'REMOVE_HOBBY',
+    id
+  }
 }
 
+// Movie reducer and action generators
+// ----------------------------------
+
+var movieId = 1;
 var movieReducer = function (state =[], action) {
   switch (action.type) {
     case 'ADD_MOVIE':
@@ -106,7 +77,22 @@ var movieReducer = function (state =[], action) {
     default:
       return state;
   }
-}
+};
+
+var addMovie = (title, genre) => {
+  return {
+    type: 'ADD_MOVIE',
+    title,
+    genre
+  }
+};
+
+var removeMovie = (id) => {
+  return {
+    type: 'REMOVE_MOVIE',
+    id
+  };
+};
 
 var reducer = redux.combineReducers({
   name: nameReducer,
@@ -130,44 +116,18 @@ var unsubscribe = store.subscribe(() =>{
 
 
 
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'HungVo'
-});
+store.dispatch(changeName('Hung Vo'));
 
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Running'
-});
+store.dispatch(addHobby('Runging'));
 
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Hiking'
-});
+store.dispatch(addHobby('Hiking'));
 
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'Mad Max',
-  genre: 'Action'
-});
+store.dispatch(addMovie('Lan va Diep', 'tinh cam'));
 
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'Lan va Diep',
-  genre: 'tinh cam'
-});
+store.dispatch(addMovie('Y thien do long', 'kiem hiep'));
 
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Emily'
-});
+store.dispatch(changeName('Ngan Mai'));
 
-store.dispatch({
-  type: 'REMOVE_MOVIE',
-  id: 2
-});
+store.dispatch(removeMovie(1));
 
-store.dispatch({
-  type: 'REMOVE_HOBBY',
-  id: 2
-});
+store.dispatch(removeHobby(1));
